@@ -1,0 +1,31 @@
+{
+  "name": "ecg-exam-generator",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "12誘導心電図の試験問題作成・計測練習アプリ。53種類のプリセットとPDF・PNG出力に対応。",
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "generate:golden": "npx vitest run src/__tests__/generateGoldenOutputs.test.ts"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "lucide-react": "^1.48.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.3",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.0.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12",
+    "vitest": "^2.1.8"
+  }
+}

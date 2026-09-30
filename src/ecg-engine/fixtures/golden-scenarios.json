@@ -1,0 +1,800 @@
+[
+  {
+    "presetId": "NORMAL_SINUS",
+    "canonicalPresetId": "NORMAL_SINUS",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "NORMAL_SINUS",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "NORMAL_SINUS",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "Baseline (Sinus + Purkinje 4-comp QRS + 2-comp P/T)",
+      "auditNotes": "Full 12-lead canonical baseline; verified V1 rS, V3-V4 transition, V5/V6 qR, Lead algebra exact."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 56,
+      "episodeCount": 40
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 75,
+      "prIntervalMs": 160,
+      "qrsDurationMs": 86,
+      "qtIntervalMs": 360,
+      "qrsAxisDeg": 59.9,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "PAC",
+    "canonicalPresetId": "PAC",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "PAC",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "PAC",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "RhythmSource (AtrialEctopicSource) + SA Clock Reset",
+      "auditNotes": "Ectopic atrial impulse fires at 460 ms coupling interval, triggers abnormal P recipe, conducts via AV node, and resets SA node schedule."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 52,
+      "episodeCount": 40
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 82.6,
+      "prIntervalMs": 160,
+      "qrsDurationMs": 86,
+      "qtIntervalMs": 360,
+      "qrsAxisDeg": 59.9,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "PVC",
+    "canonicalPresetId": "PVC",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "PVC",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "PVC",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "RhythmSource (VentricularEctopicSource) + Concealed AV Penetration",
+      "auditNotes": "Ventricular ectopic impulse has zero preceding atrial causal link, activates ECTOPIC_RV_QRS_RECIPE (145 ms), and blocks next sinus beat in AV node (compensatory pause)."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 51,
+      "episodeCount": 37
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 72,
+      "prIntervalMs": 160,
+      "qrsDurationMs": 86,
+      "qtIntervalMs": 360,
+      "qrsAxisDeg": 59.9,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "RBBB",
+    "canonicalPresetId": "RBBB",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "RBBB",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "RBBB",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "ConductionEngine (RIGHT_BUNDLE disabled) + Delayed RV Activation Component",
+      "auditNotes": "Preserves early septal/LV vectors and appends delayed RV anterior/outflow activation (52-135 ms); projects simultaneously as V1 terminal R' and I/V6 wide S."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 56,
+      "episodeCount": 40
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 75,
+      "prIntervalMs": 160,
+      "qrsDurationMs": 134,
+      "qtIntervalMs": 370,
+      "qrsAxisDeg": 76.1,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "LBBB",
+    "canonicalPresetId": "LBBB",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "LBBB",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "LBBB",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "ConductionEngine (LEFT_BUNDLE disabled) + Replaced Septal/LV Sequence",
+      "auditNotes": "Replaces normal left-to-right septal vector with RV initiation -> slow transseptal -> delayed LV free-wall components (overlapping double-peak notched R in I/V5/V6, deep QS/rS in V1)."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 56,
+      "episodeCount": 40
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 75,
+      "prIntervalMs": 160,
+      "qrsDurationMs": 138,
+      "qtIntervalMs": 372,
+      "qrsAxisDeg": 10.7,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "AVB_WENCKEBACH",
+    "canonicalPresetId": "AVB_WENCKEBACH",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "AVB_WENCKEBACH",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "AVB_WENCKEBACH",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "ConductionEngine (AV_NODE Decremental Recovery/Fatigue Kinetics)",
+      "auditNotes": "Zero hardcoded PR arrays. Emerges from exponential diastolic fatigue recovery (tau=1650ms) and incremental fatigue accumulation (0.44) until block threshold (0.92)."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 52,
+      "episodeCount": 34
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 63.8,
+      "prIntervalMs": 218.8,
+      "qrsDurationMs": 86,
+      "qtIntervalMs": 360,
+      "qrsAxisDeg": 59.9,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "AVB_COMPLETE",
+    "canonicalPresetId": "AVB_COMPLETE",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "AVB_COMPLETE",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "AVB_COMPLETE",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "ConductionEngine (AV_NODE disabled) + Dual Independent Rhythm Clocks",
+      "auditNotes": "SA node (80 bpm) and VentricularEscapeSource (38 bpm) run on independent clocks; verified zero parentEventId/triggerEventId causal chains from atria to ventricles."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 44,
+      "episodeCount": 28
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 38,
+      "prIntervalMs": 0,
+      "qrsDurationMs": 138,
+      "qtIntervalMs": 370,
+      "qrsAxisDeg": 51.5,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "ATRIAL_FIBRILLATION",
+    "canonicalPresetId": "ATRIAL_FIBRILLATION",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "ATRIAL_FIBRILLATION",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "ATRIAL_FIBRILLATION",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "RhythmSource (Chaotic Atrial Wavelets) + AV Nodal Refractory Filtering",
+      "auditNotes": "No organized P wave recipe used. High-rate atrial wavelets bombard AV_NODE; AV_NODE blocks impulses arriving during refractory period, yielding irregularly irregular ventricular RR intervals."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 146,
+      "episodeCount": 31
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 96.2,
+      "prIntervalMs": 0,
+      "qrsDurationMs": 90,
+      "qtIntervalMs": 360,
+      "qrsAxisDeg": 59.9,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "WPW_SYNDROME",
+    "canonicalPresetId": "WPW_SYNDROME",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "WPW_SYNDROME",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "WPW_SYNDROME",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "Dual Conduction Route (ACCESSORY_PATHWAY + AV_NODE/HIS) + Preexcitation Fusion Recipe",
+      "auditNotes": "Parallel conduction events emitted for ACCESSORY_PATHWAY (arriving at P+95 ms) and AV_NODE->HIS (arriving at P+130 ms); Kent arrival precedes HIS arrival by 35 ms, producing a 95 ms short PR, initial slurred delta wave (0-58 ms), and His-Purkinje fusion (35-125 ms)."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 72,
+      "episodeCount": 40
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 75,
+      "prIntervalMs": 95,
+      "qrsDurationMs": 122,
+      "qtIntervalMs": 360,
+      "qrsAxisDeg": 54.7,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "HYPERKALEMIA",
+    "canonicalPresetId": "HYPERKALEMIA",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "HYPERKALEMIA",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "HYPERKALEMIA",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "Severity-Driven Electrolyte Phenotype (canonicalSeverity = 0.74: T peaking + P attenuation + PR/QRS widening)",
+      "auditNotes": "Driven by continuous severity model (canonicalSeverity = 0.74 in [0, 1]; not mapped 1:1 to serum K+): P amp 0.45x, P dur 118ms, PR 215ms, QRS 112ms, T amp 2.85x."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 56,
+      "episodeCount": 40
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 75,
+      "prIntervalMs": 215,
+      "qrsDurationMs": 106,
+      "qtIntervalMs": 342,
+      "qrsAxisDeg": 59.9,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "HYPOKALEMIA",
+    "canonicalPresetId": "HYPOKALEMIA",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "HYPOKALEMIA",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "HYPOKALEMIA",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "Multi-Parameter Electrolyte Phenotype (T flattening + ST depression + UWaveRecipe)",
+      "auditNotes": "Attenuates T wave (0.38x), adds mild ST depression vector, and activates independent UWaveRecipe (0.18 mV post-T wave)."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 56,
+      "episodeCount": 40
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 75,
+      "prIntervalMs": 160,
+      "qrsDurationMs": 86,
+      "qtIntervalMs": 344,
+      "qrsAxisDeg": 59.9,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "BRUGADA_TYPE_1",
+    "canonicalPresetId": "BRUGADA_TYPE_1",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "BRUGADA_TYPE_1",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "BRUGADA_TYPE_1",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "STSegmentRecipe (RVOT J-Wave + Negative Slope ST + Anterior T Discordance)",
+      "auditNotes": "Modeled as a Brugada ECG pattern (not clinical diagnosis) via right-anterior/RVOT spatial source (septal + rvAnterior + +Z) projecting across V1-V3 with coved descending ST and negative V1 T wave."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 56,
+      "episodeCount": 40
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 75,
+      "prIntervalMs": 160,
+      "qrsDurationMs": 90,
+      "qtIntervalMs": 370,
+      "qrsAxisDeg": 60,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "DEXTROCARDIA",
+    "canonicalPresetId": "DEXTROCARDIA",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "DEXTROCARDIA",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "DEXTROCARDIA",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "AnatomyConfig (Mirror-Image Cardiac Geometry Transform)",
+      "auditNotes": "Inverts +X to -X and mirrors regional ventricular proximity so Lead I is negative AND precordial R amplitude decreases from V1 to V6 (distinct from RA/LA cable reversal)."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 56,
+      "episodeCount": 40
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 75,
+      "prIntervalMs": 160,
+      "qrsDurationMs": 84,
+      "qtIntervalMs": 364,
+      "qrsAxisDeg": 118.9,
+      "transitionZone": "V4-V5"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  },
+  {
+    "presetId": "PACEMAKER_VVI",
+    "canonicalPresetId": "PACEMAKER_VVI",
+    "engineVersion": "1.0.0-rc1",
+    "modelVersion": "canonical-v1",
+    "leadFieldVersion": "canonicalLeadField.v1",
+    "schemaVersion": "1.0.0",
+    "seed": 42,
+    "scenario": {
+      "schemaVersion": "1.0.0",
+      "presetId": "PACEMAKER_VVI",
+      "durationMs": 6000,
+      "samplingRateHz": 500,
+      "randomSeed": 42,
+      "electrodeReversal": "NONE",
+      "missingElectrodes": [],
+      "artifacts": {
+        "mainsHumEnabled": false,
+        "mainsFrequencyHz": 50,
+        "mainsAmplitudeMv": 0.06,
+        "baselineWanderEnabled": false,
+        "baselineWanderAmplitudeMv": 0.15,
+        "baselineWanderFrequencyHz": 0.25,
+        "emgNoiseEnabled": false,
+        "emgNoiseAmplitudeMv": 0.04
+      },
+      "overrides": {}
+    },
+    "expectedMetadata": {
+      "engineVersion": "1.0.0-rc1",
+      "modelVersion": "canonical-v1",
+      "leadFieldVersion": "canonicalLeadField.v1",
+      "scenarioSchemaVersion": "1.0.0",
+      "presetId": "PACEMAKER_VVI",
+      "presetStatus": "IMPLEMENTED",
+      "primaryDomain": "DeviceEngine (Intrinsic Ventricular Sensing/Inhibition + Lower-Rate Timeout Stimulus & Capture)",
+      "auditNotes": "Senses intrinsic ventricular activation (VVI_INHIBIT -> resets lower-rate timer) and delivers PACEMAKER_STIMULUS + CAPTURE_SUCCESS + wide RV-apex paced QRS when no intrinsic beat arrives before 68 bpm timeout."
+    },
+    "expectedTimelineSummary": {
+      "durationMs": 6000,
+      "eventCount": 30,
+      "episodeCount": 27
+    },
+    "expectedFeatureSummary": {
+      "heartRateBpm": 68,
+      "prIntervalMs": 160,
+      "qrsDurationMs": 140,
+      "qtIntervalMs": 372,
+      "qrsAxisDeg": 51.5,
+      "transitionZone": "V3-V4"
+    },
+    "expectedValidation": {
+      "passed": true,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  }
+]
