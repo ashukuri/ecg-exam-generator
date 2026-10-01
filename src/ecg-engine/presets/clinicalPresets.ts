@@ -1961,6 +1961,9 @@ export function resolveSimulationConfig(
     if (ov.pvcCount !== undefined) {
       config.pvcCount = clamp(Math.round(ov.pvcCount), 0, 20);
     }
+    if (ov.pvcOrigin === 'RV' || ov.pvcOrigin === 'LV') {
+      config.pvcOrigin = ov.pvcOrigin;
+    }
   }
 
   return config;

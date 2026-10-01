@@ -23,6 +23,7 @@ import {
 import {
   ActivationRecipe,
   ECTOPIC_ATRIAL_RECIPE,
+  ECTOPIC_LV_QRS_RECIPE,
   ECTOPIC_RV_QRS_RECIPE,
   LAFB_QRS_RECIPE,
   LBBB_QRS_RECIPE,
@@ -89,10 +90,11 @@ function selectVentricularRecipeForEpisode(
     case 'PACED_RV_APEX':
       return PACED_RV_APEX_QRS_RECIPE;
     case 'ECTOPIC_RV':
-    case 'ECTOPIC_LV':
     case 'ESCAPE_IDIOVENTRICULAR':
     case 'TORSADES_POLYMORPHIC':
       return ECTOPIC_RV_QRS_RECIPE;
+    case 'ECTOPIC_LV':
+      return ECTOPIC_LV_QRS_RECIPE;
     case 'NORMAL_PURKINJE':
     default:
       return config.ventricularRecipe;
@@ -252,7 +254,7 @@ export function evaluateCardiacSourceAtTime(
         const recipe = selectVentricularRecipeForEpisode(ep, config);
         // Rotate relative to the recipe's own referenceAxisDeg so specialized recipes (LBBB, LAFB, LPFB, PACED_RV_APEX, RVH, Pediatric)
         // never suffer from double rotation
-        const explicitAxisDeltaDeg = config.qrsAxisDeg - recipe.referenceAxisDeg;
+        const explicitAxisDeltaDeg = ep.axisTargetDeg - recipe.referenceAxisDeg;
         let rotRad = degToRad(explicitAxisDeltaDeg);
         let ampScale = ep.amplitudeScale;
         let zBias = 0;
@@ -331,15 +333,19 @@ export function evaluateCardiacSourceAtTime(
           const tRotRad = degToRad(
             ep.tAxisTargetDeg - tRecipe.referenceTAxisDeg
           );
-          evaluateComponentsAtTime(
-            accum,
-            tRecipe.components,
-            ep.startTime,
-            ep.duration,
-            tMs,
-            ep.amplitudeScale,
-            tRotRad
-          );
+          // LV ectopy uses its own secondary T source below, rather than the
+          // background sinus T template, so its T opposes the ectopic QRS.
+          if (ep.recipeVariant !== 'ECTOPIC_LV') {
+            evaluateComponentsAtTime(
+              accum,
+              tRecipe.components,
+              ep.startTime,
+              ep.duration,
+              tMs,
+              ep.amplitudeScale,
+              tRotRad
+            );
+          }
 
           // Secondary ST-T Discordance (opposes terminal activation vector in LBBB/RBBB/Brugada/PVC/Paced/RVH)
           if (ep.secondaryDiscordanceFactor > 0.01) {
@@ -353,7 +359,18 @@ export function evaluateCardiacSourceAtTime(
               config.stRecipe.id === 'ST_BRUGADA_COVED' ||
               config.stRecipe.id === 'ST_RVH_STRAIN';
             const discordanceDir: CardiacSourceState =
-              isRightPrecordialNegativeT
+              ep.recipeVariant === 'ECTOPIC_LV'
+                ? {
+                    global: { x: -0.45, y: +0.78, z: -0.88 },
+                    regional: {
+                      septal: -0.72,
+                      rvAnterior: -0.85,
+                      lvLateral: +1.1,
+                      inferior: +0.55,
+                      posterobasal: +0.45,
+                    },
+                  }
+                : isRightPrecordialNegativeT
                 ? {
                     global: { x: +0.35, y: +0.1, z: -0.75 },
                     regional: {

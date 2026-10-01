@@ -417,7 +417,7 @@ export function runEngineValidation(
         const pvcEp = timeline.episodes.find(
           (ep) =>
             ep.type === 'VENTRICULAR_ACTIVATION' &&
-            ep.recipeVariant === 'ECTOPIC_RV'
+            (ep.recipeVariant === 'ECTOPIC_RV' || ep.recipeVariant === 'ECTOPIC_LV')
         );
 
         addCheck({

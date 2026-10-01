@@ -16,6 +16,7 @@ import {
   MissingElectrodeId,
   normalizeArtifactConfig,
   PatientAgeGroup,
+  PvcOrigin,
   SimulationScenario,
 } from '../ecg-engine';
 
@@ -68,6 +69,8 @@ export interface ExamEcgCaseConfig {
   heartRateBpm: number;
   pacCount: number;
   pvcCount: number;
+  /** Optional for compatibility with previously saved question sets. */
+  pvcOrigin?: PvcOrigin;
   noise: ExamNoiseConfig;
   electrodeError: ExamElectrodeErrorConfig;
   seed: number;
@@ -175,6 +178,7 @@ export function buildExamSimulationScenario(
   const overrides: NonNullable<SimulationScenario['overrides']> = {
     pacCount: examCase.pacCount,
     pvcCount: examCase.pvcCount,
+    pvcOrigin: examCase.pvcOrigin === 'LV' ? 'LV' : 'RV',
   };
   if (examCase.useCustomHeartRate) {
     overrides.heartRateBpm = Math.max(
@@ -211,6 +215,7 @@ export function createDefaultExamCase(
     heartRateBpm: 75,
     pacCount: defaultPac,
     pvcCount: defaultPvc,
+    pvcOrigin: 'RV',
     noise: {
       emg: 'NONE',
       emgTargets: ['ALL'],

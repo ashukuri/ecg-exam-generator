@@ -10,6 +10,7 @@
 import { ConductionNetworkRuntime } from '../conduction/conductionEngine';
 import { RandomSource } from '../core/random';
 import { clamp } from '../core/units';
+import { ECTOPIC_LV_QRS_RECIPE } from '../morphology/recipes';
 import { ResolvedSimulationConfig } from '../resolver/resolvedConfig';
 import { EventPriorityQueue } from './eventQueue';
 import {
@@ -466,7 +467,9 @@ export function buildMasterTimeline(
       rootImpulseEventId: rootEventId,
       recipeVariant: variant,
       amplitudeScale: config.qrsAmplitudeScale,
-      axisTargetDeg: config.qrsAxisDeg,
+      axisTargetDeg: variant === 'ECTOPIC_LV'
+        ? ECTOPIC_LV_QRS_RECIPE.referenceAxisDeg
+        : config.qrsAxisDeg,
       torsadesPhaseRad,
     });
 
@@ -575,7 +578,7 @@ export function buildMasterTimeline(
             timestamp: ev.timestamp + 440,
             priority: 9,
             sourceId: 'EXAM_PVC',
-            originFocus: 'RV_OUTFLOW',
+            originFocus: config.pvcOrigin === 'LV' ? 'LV_POSTERIOR' : 'RV_OUTFLOW',
           });
         }
 
@@ -610,7 +613,11 @@ export function buildMasterTimeline(
             timestamp: ev.timestamp + pvcSource.couplingIntervalMs,
             priority: 9,
             sourceId: pvcSource.id,
-            originFocus: pvcSource.originFocus,
+            originFocus: config.pvcOrigin === 'LV'
+              ? 'LV_POSTERIOR'
+              : config.pvcOrigin === 'RV'
+                ? 'RV_OUTFLOW'
+                : pvcSource.originFocus,
           });
         }
 
@@ -738,7 +745,9 @@ export function buildMasterTimeline(
         const variant =
           ev.originFocus === 'POLYMORPHIC'
             ? 'TORSADES_POLYMORPHIC'
-            : 'ECTOPIC_RV';
+            : ev.originFocus === 'LV_POSTERIOR'
+              ? 'ECTOPIC_LV'
+              : 'ECTOPIC_RV';
 
         emitVentricularActivation(
           ev.timestamp,
