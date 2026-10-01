@@ -32,7 +32,6 @@ import {
   EXAM_PAPER_SPEED_MM_PER_S,
   EXAM_SHEET_GEOMETRY_MM,
   ExamEcgCaseConfig,
-  getExamLeadWindow,
 } from './examTypes';
 
 export interface RenderExamSheetOptions {
@@ -49,7 +48,6 @@ export interface SimulatedExamCaseResult {
   simulation: SimulationResult;
   measuredPacCount: number;
   measuredPvcCount: number;
-  leadWindow: ReturnType<typeof getExamLeadWindow>;
 }
 
 function escapeXml(str: string): string {
@@ -82,17 +80,11 @@ export function simulateExamEcgCase(
       (e.sourceId === 'EXAM_PVC' || e.sourceId === 'PVC_FOCUS')
   ).length;
 
-  const firstEctopic = simulation.timeline.events.find(e =>
-    (e.type === 'VENTRICULAR_ECTOPIC_IMPULSE' && (e.sourceId === 'EXAM_PVC' || e.sourceId === 'PVC_FOCUS')) ||
-    (e.type === 'ATRIAL_ECTOPIC_IMPULSE' && (e.sourceId === 'EXAM_PAC' || e.sourceId === 'PAC_FOCUS'))
-  );
-
   return {
     examCase,
     simulation,
     measuredPacCount,
     measuredPvcCount,
-    leadWindow: getExamLeadWindow(examCase, firstEctopic?.timestamp),
   };
 }
 
@@ -130,7 +122,7 @@ export function buildCalibrationPulsePathMm(
  * Coordinate system: 1 SVG unit = 1.000 millimeter.
  * - Paper speed: 25.0 mm/s
  * - Gain: 10.0 mm/mV
- * - Simultaneous 3x4 layout (Rows 0..2): all 12 panels show the same selected
+ * - Simultaneous 3x4 layout (Rows 0..2): all 12 panels show the same fixed
  *   2.5-second interval (62.5 mm per panel), independent of column position.
  *     Row 3    (II Rhythm):     0.0 - 10.0 s (250.0 mm)
  */
@@ -142,7 +134,6 @@ export function renderExamSheetSvg(
   const showQuestionLabel =
     options.showQuestionLabel ?? Boolean(options.questionLabel);
   const questionLabel = options.questionLabel?.trim() || '';
-  const leadWindow = simResult.leadWindow;
 
   const {
     pageWidthMm,
@@ -210,8 +201,8 @@ export function renderExamSheetSvg(
       const leadName: LeadName = rowLeads[c]!;
       const xCellStart = leadAreaXMm + c * leadColumnWidthMm;
       const xCellEnd = xCellStart + leadColumnWidthMm;
-      const tStartMs = leadWindow.startMs;
-      const tEndMs = leadWindow.endMs;
+      const tStartMs = 0;
+      const tEndMs = Math.round(columnDurationSec * 1000);
 
       const points = simResult.simulation.ecg.final[leadName] ?? [];
       const coords: string[] = [];
@@ -285,9 +276,6 @@ export function renderExamSheetSvg(
 
   // 5. Header Elements (Strictly controlled by examMode: ONLY Question number and 25 mm/s 10 mm/mV)
   const headerElements: string[] = [];
-  headerElements.push(
-    `<text x="${(pageWidthMm / 2).toFixed(2)}" y="6.5" text-anchor="middle" font-family="'Courier New', monospace" font-size="2.8" fill="#475569" data-lead-window-label="true">12 leads: ${leadWindow.label} (simultaneous)</text>`
-  );
   if (showQuestionLabel && questionLabel) {
     headerElements.push(
       `<text x="${gridXMm.toFixed(2)}" y="11.8" font-family="'Inter', 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="4.6" font-weight="800" fill="#0f172a" data-question-label="true">${escapeXml(questionLabel)}</text>`
@@ -307,7 +295,7 @@ export function renderExamSheetSvg(
   );
 
   return [
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${pageWidthMm} ${pageHeightMm}" width="100%" height="100%" data-exam-sheet="true" data-exam-mode="${examMode ? 'ON' : 'OFF'}" data-paper-speed-mm-s="${EXAM_PAPER_SPEED_MM_PER_S}" data-gain-mm-mv="${EXAM_GAIN_MM_PER_MV}" data-total-duration-s="10.0" data-cell-width-mm="62.5" data-rhythm-strip-width-mm="250.0" data-lead-layout="SIMULTANEOUS" data-lead-window-start-ms="${leadWindow.startMs}">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${pageWidthMm} ${pageHeightMm}" width="100%" height="100%" data-exam-sheet="true" data-exam-mode="${examMode ? 'ON' : 'OFF'}" data-paper-speed-mm-s="${EXAM_PAPER_SPEED_MM_PER_S}" data-gain-mm-mv="${EXAM_GAIN_MM_PER_MV}" data-total-duration-s="10.0" data-cell-width-mm="62.5" data-rhythm-strip-width-mm="250.0" data-lead-layout="SIMULTANEOUS" data-lead-window-start-ms="0">`,
     `  <rect x="0" y="0" width="${pageWidthMm}" height="${pageHeightMm}" fill="#ffffff" />`,
     `  <g id="exam-header">${headerElements.join('')}</g>`,
     `  <g id="ecg-minor-grid" stroke="#f9d2d2" stroke-width="0.13">${minorGridLines.join('')}</g>`,

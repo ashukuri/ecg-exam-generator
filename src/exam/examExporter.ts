@@ -56,7 +56,6 @@ function buildQuestionPageContentStream(
   questionLabel?: string
 ): string {
   const ops: string[] = [];
-  const leadWindow = sim.leadWindow;
   const {
     gridXMm,
     gridYMm,
@@ -66,6 +65,7 @@ function buildQuestionPageContentStream(
     leadColumnWidthMm,
     leadRowHeightMm,
     rowBaselinesYMm,
+    columnDurationSec,
   } = EXAM_SHEET_GEOMETRY_MM;
 
   // 1. White sheet background
@@ -160,8 +160,8 @@ function buildQuestionPageContentStream(
     for (let c = 0; c < 4; c++) {
       const leadName: LeadName = rowLeads[c]!;
       const xCellStart = leadAreaXMm + c * leadColumnWidthMm;
-      const tStartMs = leadWindow.startMs;
-      const tEndMs = leadWindow.endMs;
+      const tStartMs = 0;
+      const tEndMs = Math.round(columnDurationSec * 1000);
 
       // Column divider tick
       ops.push('0.25 0.30 0.38 RG 0.65 w');
@@ -233,9 +233,6 @@ function buildQuestionPageContentStream(
   }
 
   // 8. Header labels (Strictly ONLY Question number if provided + fixed 25 mm/s 10 mm/mV scale)
-  ops.push('BT /F1 8.0 Tf 0.28 0.33 0.40 rg');
-  ops.push(`${mmXToPt(112).toFixed(2)} ${mmYToPt(6.5).toFixed(2)} Td`);
-  ops.push(`(${pdfEscapeText(`12 leads: ${leadWindow.label} (simultaneous)`)}) Tj ET`);
   if (questionLabel) {
     ops.push('BT /F2 13 Tf 0.06 0.09 0.16 rg');
     ops.push(`${mmXToPt(gridXMm).toFixed(2)} ${mmYToPt(11.8).toFixed(2)} Td`);

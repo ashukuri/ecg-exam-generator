@@ -16,7 +16,6 @@ import {
   ExamEcgCaseConfig,
   ExamQuestionSet,
   createDefaultExamCase,
-  EXAM_LEAD_WINDOW_STARTS_MS,
 } from '../exam/examTypes';
 import {
   ElectrodeReversalMode,
@@ -1730,32 +1729,6 @@ export const StandaloneExamApp: React.FC = () => {
                   📄 単問PDF出力 (A4横)
                 </button>
               </div>
-            </div>
-
-            <div className="bg-white rounded-xl border border-slate-200 p-3 flex flex-wrap items-center gap-3">
-              <label htmlFor="lead-window" className="text-xs font-bold text-slate-700">
-                全12誘導の表示時間帯
-              </label>
-              <select
-                id="lead-window"
-                value={activeCase.leadWindowStartMs ?? 'AUTO'}
-                onChange={(e) => {
-                  const startMs = e.target.value === 'AUTO' ? undefined
-                    : EXAM_LEAD_WINDOW_STARTS_MS.find(start => start === Number(e.target.value)) ?? 0;
-                  updateActiveCase(prev => ({ ...prev, leadWindowStartMs: startMs }));
-                }}
-                className="px-2 py-1 text-xs border border-slate-300 rounded bg-white"
-              >
-                <option value="AUTO">自動（最初の期外収縮を表示）</option>
-                {EXAM_LEAD_WINDOW_STARTS_MS.map(startMs => (
-                  <option key={startMs} value={startMs}>
-                    {(startMs / 1000).toFixed(1)}〜{(startMs / 1000 + 2.5).toFixed(1)}秒
-                  </option>
-                ))}
-              </select>
-              <span className="text-[11px] text-slate-500">
-                表示中: {simulatedCase.leadWindow.label}。下段のII誘導は10秒全体です。
-              </span>
             </div>
 
             {/* A4 Landscape 12-Lead Exam Sheet Preview */}

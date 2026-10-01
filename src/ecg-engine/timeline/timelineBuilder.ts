@@ -62,6 +62,10 @@ export function buildMasterTimeline(
     (s) => s.type === 'VENTRICULAR_TACHYCARDIA' && s.enabled
   );
 
+  // AV nodal recovery uses its own seeded stream, independent of the number
+  // of atrial wavelets generated for the requested recording duration.
+  const afConductionRng = afSource ? rng.fork('af_av_filtering') : undefined;
+
   // Helper to schedule next Sinus Impulse
   let sinusBeatCount = 0;
   const scheduleSinusImpulse = (timeMs: number) => {
@@ -135,13 +139,15 @@ export function buildMasterTimeline(
         Math.floor((durationMs / 60000) * sinusRate)
       );
 
-      // Distribute ectopics evenly across available sinus beats (starting at beat 2 or 3, leaving spacing)
+      // Place the first requested ectopic after the first sinus beat so the fixed
+      // 2.5-second exam panels include it. Distribute the remainder across the
+      // recording, retaining at least one intervening sinus beat.
       const usableSpan = Math.max(totalEctopics * 2, estimatedBeats - 3);
       const step = usableSpan / (totalEctopics + 1);
 
-      let lastBeat = 1;
+      let lastBeat = -1;
       for (let k = 0; k < totalEctopics; k++) {
-        let assignedBeat = Math.max(
+        let assignedBeat = k === 0 ? 1 : Math.max(
           lastBeat + 2,
           Math.min(
             estimatedBeats - 1,
@@ -960,7 +966,7 @@ export function buildMasterTimeline(
         ) {
           const meanTargetRr =
             60000 / clamp(afSource.meanVentricularResponseBpm, 45, 190);
-          const dynamicRefractoryOffset = rhythmRng.nextRange(
+          const dynamicRefractoryOffset = afConductionRng!.nextRange(
             meanTargetRr * (1 - afSource.irregularityIndex * 1.35),
             meanTargetRr * (1 + afSource.irregularityIndex * 1.35)
           );
