@@ -22,9 +22,6 @@ import {
 
 export type ExamNoiseLevel = 'NONE' | 'SMALL' | 'LARGE';
 
-export const EXAM_LEAD_WINDOW_STARTS_MS = [0, 2500, 5000, 7500] as const;
-export type ExamLeadWindowStartMs = (typeof EXAM_LEAD_WINDOW_STARTS_MS)[number];
-
 export type QuestionMode =
   | 'DIAGNOSIS'
   | 'MEASUREMENT'
@@ -74,8 +71,6 @@ export interface ExamEcgCaseConfig {
   pvcCount: number;
   /** Optional for compatibility with previously saved question sets. */
   pvcOrigin?: PvcOrigin;
-  /** Shared 2.5-second window; missing values select the first ectopic beat, or 0 ms. */
-  leadWindowStartMs?: ExamLeadWindowStartMs;
   noise: ExamNoiseConfig;
   electrodeError: ExamElectrodeErrorConfig;
   seed: number;
@@ -93,9 +88,9 @@ export interface ExamQuestionSet {
 /**
  * Fixed 3x4 Clinical 12-Lead Layout (Top 3 Rows) + Row 3 (10-Sec Continuous Lead II Rhythm Strip)
  *
- * Row 0: I,   aVR, V1, V4  (all columns share the selected 2.5-second window)
- * Row 1: II,  aVL, V2, V5  (all columns share the selected 2.5-second window)
- * Row 2: III, aVF, V3, V6  (all columns share the selected 2.5-second window)
+ * Row 0: I,   aVR, V1, V4  (all columns share the fixed 2.5-second window)
+ * Row 1: II,  aVL, V2, V5  (all columns share the fixed 2.5-second window)
+ * Row 2: III, aVF, V3, V6  (all columns share the fixed 2.5-second window)
  * Row 3: II (Continuous 10.0s Rhythm Strip: 0.0-10.0s = 250.0 mm)
  */
 export const EXAM_FIXED_12_LEAD_GRID = [
@@ -118,7 +113,7 @@ export const EXAM_CALIBRATION_PULSE_MS = 200; // 5 mm wide at 25 mm/s
  *   (52 major 5mm squares wide x 36 major 5mm squares high)
  * - Left Calibration Column: 10.0 mm wide (x = 18.5..28.5)
  * - 4 Lead Columns in Rows 0..2: 4 x 62.5 mm = 250.0 mm wide (x = 28.5..278.5)
- *   At 25 mm/s, each 62.5 mm column displays the SAME selected 2.50-second interval.
+ *   At 25 mm/s, each 62.5 mm column displays the SAME fixed 2.50-second interval.
  *   Columns are separate lead panels, not consecutive portions of the recording.
  * - Row 3 (Bottom 4th Row): Mandatory 10.0-second continuous Lead II rhythm strip
  *   Spanning full 250.0 mm waveform width (x = 28.5..278.5 mm, 0.0 - 10.0 s)
@@ -143,22 +138,6 @@ export const EXAM_SHEET_GEOMETRY_MM = {
   totalDurationMs: 10000, // 10.00 s total recording
   samplingRateHz: 500,
 } as const;
-
-/** All 12 lead panels use this interval; the continuous Lead II strip remains 0-10 s. */
-export function getExamLeadWindow(examCase: ExamEcgCaseConfig, firstEctopicTimeMs?: number): {
-  startMs: ExamLeadWindowStartMs;
-  endMs: number;
-  label: string;
-} {
-  const requestedStart = examCase.leadWindowStartMs;
-  const autoStart = firstEctopicTimeMs !== undefined && Number.isFinite(firstEctopicTimeMs)
-    ? Math.min(7500, Math.max(0, Math.floor(firstEctopicTimeMs / 2500) * 2500))
-    : 0;
-  const startMs = EXAM_LEAD_WINDOW_STARTS_MS.find(start => start === requestedStart)
-    ?? EXAM_LEAD_WINDOW_STARTS_MS.find(start => start === autoStart)!;
-  const endMs = startMs + EXAM_SHEET_GEOMETRY_MM.columnDurationSec * 1000;
-  return { startMs, endMs, label: `${(startMs / 1000).toFixed(1)}-${(endMs / 1000).toFixed(1)} s` };
-}
 
 export function mapExamNoiseToArtifactConfig(
   noise: ExamNoiseConfig
