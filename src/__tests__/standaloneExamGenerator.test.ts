@@ -124,7 +124,7 @@ describe('Standalone ECG Exam Generator & 53-Preset Clinical Suite', () => {
       expect(svg).toContain('data-calibration-row="3"');
       expect(svg).not.toContain(presetId); // Zero answer leakage in examMode
 
-      // Verify Lead II (0.0-2.5s in Row 1 Col 0) and 10s Lead II Rhythm Strip (0.0-10.0s in Row 3) share identical samples
+      // Verify Lead II (selected 2.5s in Row 1 Col 0) and 10s Lead II Rhythm Strip (0.0-10.0s in Row 3) share identical samples
       const leadII = sim.ecg.final.II;
       expect(leadII.length).toBe(5001); // 10.0s at 500 Hz
       expect(leadII[0]!.t).toBe(0);
@@ -169,7 +169,7 @@ describe('Standalone ECG Exam Generator & 53-Preset Clinical Suite', () => {
     const auditMd = [
       '# Clinical Fidelity & Waveform Calibration Audit Report (53 Presets)',
       '',
-      '- **Standard Layout**: `3×4 Sequential (2.5s × 4 = 62.5 mm/col)` + Mandatory `10.0s Continuous Lead II Rhythm Strip (250.0 mm)`',
+      '- **Standard Layout**: `3×4 Simultaneous (same 2.5s in every 62.5 mm panel)` + Mandatory `10.0s Continuous Lead II Rhythm Strip (250.0 mm)`',
       '- **Scale**: Fixed `25 mm/s`, `10 mm/mV`, `1 mV` calibration pulse on all 4 rows',
       '- **Total Presets Audited**: `53 / 53 IMPLEMENTED` (`0` Validation Errors)',
       '',
