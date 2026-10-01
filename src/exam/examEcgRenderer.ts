@@ -1,5 +1,5 @@
 /**
- * 12-Lead ECG Exam Sheet SVG Renderer (3x4 Sequential + Mandatory 10-Sec Lead II Rhythm Strip)
+ * 12-Lead ECG Exam Sheet SVG Renderer (3x4 Simultaneous + Mandatory 10-Sec Lead II Rhythm Strip)
  *
  * Guarantees:
  * 1. Fixed 3x4 + 10s Lead II layout ONLY:
@@ -32,6 +32,7 @@ import {
   EXAM_PAPER_SPEED_MM_PER_S,
   EXAM_SHEET_GEOMETRY_MM,
   ExamEcgCaseConfig,
+  getExamLeadWindow,
 } from './examTypes';
 
 export interface RenderExamSheetOptions {
@@ -48,6 +49,7 @@ export interface SimulatedExamCaseResult {
   simulation: SimulationResult;
   measuredPacCount: number;
   measuredPvcCount: number;
+  leadWindow: ReturnType<typeof getExamLeadWindow>;
 }
 
 function escapeXml(str: string): string {
@@ -80,11 +82,17 @@ export function simulateExamEcgCase(
       (e.sourceId === 'EXAM_PVC' || e.sourceId === 'PVC_FOCUS')
   ).length;
 
+  const firstEctopic = simulation.timeline.events.find(e =>
+    (e.type === 'VENTRICULAR_ECTOPIC_IMPULSE' && (e.sourceId === 'EXAM_PVC' || e.sourceId === 'PVC_FOCUS')) ||
+    (e.type === 'ATRIAL_ECTOPIC_IMPULSE' && (e.sourceId === 'EXAM_PAC' || e.sourceId === 'PAC_FOCUS'))
+  );
+
   return {
     examCase,
     simulation,
     measuredPacCount,
     measuredPvcCount,
+    leadWindow: getExamLeadWindow(examCase, firstEctopic?.timestamp),
   };
 }
 
@@ -122,11 +130,8 @@ export function buildCalibrationPulsePathMm(
  * Coordinate system: 1 SVG unit = 1.000 millimeter.
  * - Paper speed: 25.0 mm/s
  * - Gain: 10.0 mm/mV
- * - Sequential 3x4 layout (Rows 0..2) + 10.0s Continuous Lead II Rhythm Strip (Row 3):
- *     Column 0 (I, II, III):    0.0 - 2.5 s (62.5 mm)
- *     Column 1 (aVR, aVL, aVF): 2.5 - 5.0 s (62.5 mm)
- *     Column 2 (V1, V2, V3):    5.0 - 7.5 s (62.5 mm)
- *     Column 3 (V4, V5, V6):    7.5 - 10.0 s (62.5 mm)
+ * - Simultaneous 3x4 layout (Rows 0..2): all 12 panels show the same selected
+ *   2.5-second interval (62.5 mm per panel), independent of column position.
  *     Row 3    (II Rhythm):     0.0 - 10.0 s (250.0 mm)
  */
 export function renderExamSheetSvg(
@@ -137,6 +142,7 @@ export function renderExamSheetSvg(
   const showQuestionLabel =
     options.showQuestionLabel ?? Boolean(options.questionLabel);
   const questionLabel = options.questionLabel?.trim() || '';
+  const leadWindow = simResult.leadWindow;
 
   const {
     pageWidthMm,
@@ -191,7 +197,7 @@ export function renderExamSheetSvg(
     );
   }
 
-  // 3. Build 3x4 Sequential Lead Waveform Paths & Lead Labels (Rows 0..2)
+  // 3. Build 3x4 Simultaneous Lead Waveform Paths & Lead Labels (Rows 0..2)
   const leadElements: string[] = [];
 
   for (let r = 0; r < 3; r++) {
@@ -204,8 +210,8 @@ export function renderExamSheetSvg(
       const leadName: LeadName = rowLeads[c]!;
       const xCellStart = leadAreaXMm + c * leadColumnWidthMm;
       const xCellEnd = xCellStart + leadColumnWidthMm;
-      const tStartMs = Math.round(c * columnDurationSec * 1000);
-      const tEndMs = Math.round((c + 1) * columnDurationSec * 1000);
+      const tStartMs = leadWindow.startMs;
+      const tEndMs = leadWindow.endMs;
 
       const points = simResult.simulation.ecg.final[leadName] ?? [];
       const coords: string[] = [];
@@ -279,6 +285,9 @@ export function renderExamSheetSvg(
 
   // 5. Header Elements (Strictly controlled by examMode: ONLY Question number and 25 mm/s 10 mm/mV)
   const headerElements: string[] = [];
+  headerElements.push(
+    `<text x="${(pageWidthMm / 2).toFixed(2)}" y="6.5" text-anchor="middle" font-family="'Courier New', monospace" font-size="2.8" fill="#475569" data-lead-window-label="true">12 leads: ${leadWindow.label} (simultaneous)</text>`
+  );
   if (showQuestionLabel && questionLabel) {
     headerElements.push(
       `<text x="${gridXMm.toFixed(2)}" y="11.8" font-family="'Inter', 'Hiragino Sans', 'Noto Sans JP', sans-serif" font-size="4.6" font-weight="800" fill="#0f172a" data-question-label="true">${escapeXml(questionLabel)}</text>`
@@ -298,7 +307,7 @@ export function renderExamSheetSvg(
   );
 
   return [
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${pageWidthMm} ${pageHeightMm}" width="100%" height="100%" data-exam-sheet="true" data-exam-mode="${examMode ? 'ON' : 'OFF'}" data-paper-speed-mm-s="${EXAM_PAPER_SPEED_MM_PER_S}" data-gain-mm-mv="${EXAM_GAIN_MM_PER_MV}" data-total-duration-s="10.0" data-cell-width-mm="62.5" data-rhythm-strip-width-mm="250.0">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${pageWidthMm} ${pageHeightMm}" width="100%" height="100%" data-exam-sheet="true" data-exam-mode="${examMode ? 'ON' : 'OFF'}" data-paper-speed-mm-s="${EXAM_PAPER_SPEED_MM_PER_S}" data-gain-mm-mv="${EXAM_GAIN_MM_PER_MV}" data-total-duration-s="10.0" data-cell-width-mm="62.5" data-rhythm-strip-width-mm="250.0" data-lead-layout="SIMULTANEOUS" data-lead-window-start-ms="${leadWindow.startMs}">`,
     `  <rect x="0" y="0" width="${pageWidthMm}" height="${pageHeightMm}" fill="#ffffff" />`,
     `  <g id="exam-header">${headerElements.join('')}</g>`,
     `  <g id="ecg-minor-grid" stroke="#f9d2d2" stroke-width="0.13">${minorGridLines.join('')}</g>`,
