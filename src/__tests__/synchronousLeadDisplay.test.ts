@@ -15,7 +15,7 @@ const mmToPt = 72 / 25.4;
 describe('Simultaneous 3x4 lead display', () => {
   it('renders the same fixed 2.5 seconds in all SVG/PDF panels and the full 10 seconds below', () => {
     const startMs = 0;
-    const examCase = { ...createDefaultExamCase('PVC', 202601), pvcCount: 4 };
+    const examCase = createDefaultExamCase('PVC', 202601);
     const sim = simulateExamEcgCase(examCase);
     const svg = renderExamSheetSvg(sim, { examMode: true });
     const pdfBytes = buildExamQuestionSetPdfBytes([examCase]);
@@ -68,7 +68,7 @@ describe('Simultaneous 3x4 lead display', () => {
   });
 
   it.each(['RV', 'LV'] as const)('displays a %s PVC at the same instant in all 12 panels', pvcOrigin => {
-    const examCase = { ...createDefaultExamCase('PVC', 202601), pvcOrigin, pvcCount: 4 };
+    const examCase = { ...createDefaultExamCase('PVC', 202601), pvcOrigin };
     const sim = simulateExamEcgCase(examCase);
     const pvc = sim.simulation.timeline.episodes.find(ep => ep.type === 'VENTRICULAR_ACTIVATION' && ep.recipeVariant === `ECTOPIC_${pvcOrigin}`)!;
     const window = { startMs: 0, endMs: 2500 };

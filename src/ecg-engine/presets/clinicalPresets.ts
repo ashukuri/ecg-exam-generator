@@ -501,7 +501,7 @@ export const CLINICAL_PRESETS: Record<
             id: 'AF_SOURCE',
             enabled: true,
             meanVentricularResponseBpm: 92,
-            irregularityIndex: 0.28,
+            irregularityIndex: 0.55,
             fWaveAmplitudeMv: 0.085,
             fWaveFrequencyHz: 6.4,
           },
