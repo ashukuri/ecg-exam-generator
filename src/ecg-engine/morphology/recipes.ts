@@ -557,6 +557,56 @@ export const ECTOPIC_RV_QRS_RECIPE: ActivationRecipe = {
 };
 
 /**
+ * Representative posterior LV myocardial ectopy (~145 ms).
+ * Early LV spread followed by delayed RV activation produces a broad R in V1
+ * and a dominant S in V6 (RBBB-like), with a superior frontal axis.
+ * This is one educational example, not a universal morphology for every LV focus.
+ */
+export const ECTOPIC_LV_QRS_RECIPE: ActivationRecipe = {
+  id: 'QRS_ECTOPIC_LV',
+  name: 'Posterior LV Ectopic Activation (Slow Myocardial Spread)',
+  referenceAxisDeg: -60,
+  components: [
+    {
+      id: 'PVC_LV_EARLY_SLUR',
+      description: 'Initial myocardial spread from posterior LV focus (0-65 ms)',
+      startFraction: 0,
+      durationFraction: 65 / 145,
+      magnitude: 0.95,
+      kernel: { type: 'BETA', alpha: 2.2, beta: 2.6 },
+      spatialDirection: {
+        global: { x: +0.38, y: -0.85, z: +0.55 },
+        regional: {
+          septal: +0.45,
+          rvAnterior: +0.55,
+          lvLateral: -0.55,
+          inferior: -0.65,
+          posterobasal: 0,
+        },
+      },
+    },
+    {
+      id: 'PVC_LV_LATE_RV_BULK',
+      description: 'Delayed contralateral RV myocardial activation (45-145 ms)',
+      startFraction: 45 / 145,
+      durationFraction: 100 / 145,
+      magnitude: 1.85,
+      kernel: { type: 'BETA', alpha: 2.6, beta: 2.4 },
+      spatialDirection: {
+        global: { x: +0.45, y: -0.78, z: +0.88 },
+        regional: {
+          septal: +0.72,
+          rvAnterior: +0.85,
+          lvLateral: -1.1,
+          inferior: -0.55,
+          posterobasal: -0.45,
+        },
+      },
+    },
+  ],
+};
+
+/**
  * Dedicated RV Apical Pacing Recipe (PACEMAKER_VVI / PACEMAKER_DDD, ~150 ms):
  * Activation starts at the RV apex and spreads superiorly (-60 deg), posteriorly (-Z), and leftward (+X).
  * Guarantees strongly negative LBBB-like QS morphology in V1–V3 and superior-leftward axis (negative II/III/aVF, positive I/aVL).

@@ -15,7 +15,7 @@ import {
   STSegmentRecipe,
   UWaveRecipe,
 } from '../morphology/recipes';
-import { PatientAgeGroup } from '../scenario/types';
+import { PatientAgeGroup, PvcOrigin } from '../scenario/types';
 import { ConductionNodeId } from '../timeline/events';
 import {
   AtrialRepolarizationConfig,
@@ -61,6 +61,7 @@ export type ResolvedSimulationConfig = {
 
   pacCount?: number;
   pvcCount?: number;
+  pvcOrigin?: PvcOrigin;
 };
 
 export function createCanonicalNormalConfig(): ResolvedSimulationConfig {

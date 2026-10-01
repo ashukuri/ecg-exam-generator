@@ -843,6 +843,30 @@ export const StandaloneExamApp: React.FC = () => {
                   </div>
                 </div>
 
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <label htmlFor="pvc-origin" className="text-[11px] font-semibold text-slate-600 block">
+                    PVCの起源
+                  </label>
+                  <select
+                    id="pvc-origin"
+                    value={activeCase.pvcOrigin === 'LV' ? 'LV' : 'RV'}
+                    disabled={activeCase.pvcCount === 0}
+                    onChange={(e) =>
+                      updateActiveCase((prev) => ({
+                        ...prev,
+                        pvcOrigin: e.target.value === 'LV' ? 'LV' : 'RV',
+                      }))
+                    }
+                    className="w-full px-2 py-1 text-xs bg-white border border-slate-300 rounded disabled:opacity-50"
+                  >
+                    <option value="RV">右室起源</option>
+                    <option value="LV">左室起源</option>
+                  </select>
+                  <p className="text-[10px] text-slate-500">
+                    右室は左脚ブロック様、左室は右脚ブロック様の代表的なPVC波形です。
+                  </p>
+                </div>
+
                 {/* Biophysical Artifacts & Noise */}
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
                   <div className="flex items-center justify-between">
@@ -1850,7 +1874,7 @@ export const StandaloneExamApp: React.FC = () => {
                                 : `${meta.nameJa} (${q.presetId}) — Seed: ${q.seed}`}
                             </div>
                             <div className="text-[11px] text-slate-500 font-mono">
-                              PAC:{q.pacCount} | PVC:{q.pvcCount} | 電極:{electrodeText} |
+                              PAC:{q.pacCount} | PVC:{q.pvcCount}{q.pvcCount > 0 ? ` (${q.pvcOrigin === 'LV' ? '左室' : '右室'})` : ''} | 電極:{electrodeText} |
                               ノイズ:{noiseText}
                               {q.examinerNote ? ` | メモ: ${q.examinerNote}` : ''}
                             </div>

@@ -177,6 +177,9 @@ export type ArtifactConfig = {
   acTargets?: ArtifactTarget[];
 };
 
+/** Representative ventricular ectopic origin; omitted values preserve RV behavior. */
+export type PvcOrigin = 'RV' | 'LV';
+
 export type ParameterOverrides = {
   heartRateBpm?: number;
   pDurationMs?: number;
@@ -192,6 +195,7 @@ export type ParameterOverrides = {
   electrolyteSeverity?: number;
   pacCount?: number;
   pvcCount?: number;
+  pvcOrigin?: PvcOrigin;
 };
 
 export type SimulationScenario = {
